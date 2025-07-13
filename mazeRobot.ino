@@ -32,7 +32,8 @@ VL53L0X vl53;                       //  Creates an object vl53 from the VL53L0X 
 MPU6050 mpu;
 volatile long encL, encR;           // and for encoder tick counter we diffein them as volatile since thay are inside an interrupt service routines isr
 int curR=0, curC=0, curDir=0;       // for more flixple move we assume that the robot is moving in many direction as 0 in the center and keep track the possition on it and direction 
-bool goalReached=false;             // a flag to stop the robot if he find the goul 
+bool goalReached=false;             //flag for reach the goul or not 
+bool visited[MAZE_ROWS][MAZE_COLS] = { false };  // initialize all cell as unvisited and when we start it will begin 
 const int goalR =MAZE_ROWS-1, goalC =MAZE_COLS-1;  // since we assume our maze is having an cell and so we need to make an center for the goul so we assume that the goul is if 10*10 cells   so the goul in 9*9 for assimpution
 const int dr[4]={-1,0,1,0}, dc[4]={0,1,0,-1};      // so the robot need an direction to move so this array will help as to make the robot make his think and chose the next step 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -171,7 +172,8 @@ void leftHandStep(){
 
     // for the next cell coordinates in the dir we will calculate its row and column based on dir 
     int newRow = curR + dr[direction]; // changing in row based on dir from dr array 
-    int newCol = curC + dc[direction];// changing in column based on dir from dc array 
+    int newCol = curC + dc[direction];// changing in column based on dir from dc array
+    visited[curR][curC] = true;       // mark every visted cell as visted 
 
     // then check  if theres a wall in that direction 
     bool isBlocked = false; // initial value that there is no wall 
@@ -186,8 +188,8 @@ void leftHandStep(){
       isBlocked = wallOnRight; // give the ir right detect value to variable
     }
 
-  //  if the dir is valid which no blocks walls and in maze bounds select this dir to be next dir 
-    if (!isBlocked && newRow >= 0 && newRow < MAZE_ROWS && newCol >= 0 && newCol < MAZE_COLS) {
+  //  if the dir is valid which no blocks walls and in maze bounds select this dir to be next dir and aslo not as visted  
+    if (!isBlocked && newRow >= 0 && newRow < MAZE_ROWS && newCol >= 0 && newCol < MAZE_COLS && !visited[newRow][newCol]) {
       nextDirection = direction;  // so the dir is a valid dir row and column
       break;                      // no need to check the others dir
     }
