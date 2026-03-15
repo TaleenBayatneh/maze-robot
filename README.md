@@ -63,4 +63,10 @@ When deciding the next move, the robot checks directions in this order:
 3. Power on - the robot will start solving automatically
 4. Robot stops when goal is reached
 
+## Project Management
+
+For more details about the project progress, completed tasks, and team workflow, see our Trello board:
+
+- https://trello.com/invite/b/6870c95c55b4e7f5887c4133/ATTIb22c4f3053a5128c604d37865c2615bbC6C06563/micromouse-maze-project
+
 
